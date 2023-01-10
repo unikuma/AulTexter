@@ -6,7 +6,10 @@ using System.Text;
 
 namespace AulTexter.Models
 {
-	public class Model : NotificationObject
+	public class ExoConfing
 	{
+		public string Name { get; set; }
+
+		public string ExoTemplate { get; set; }
 	}
 }
