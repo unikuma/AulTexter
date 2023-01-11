@@ -20,6 +20,11 @@ namespace AulTexter.ViewModels
 		// Some useful code snippets for ViewModel are defined as l*(llcom, llcomn, lvcomm, lsprop, etc...).
 		public void Initialize()
 		{
+			
+		}
+
+		public MainWindowViewModel()
+		{
 			ExoConfigs = new ObservableCollection<ExoConfing>()
 			{
 				new ExoConfing()
@@ -30,7 +35,7 @@ namespace AulTexter.ViewModels
 				new ExoConfing()
 				{
 					Name = "通常2",
-					ExoTemplate = "（Exoテンプレートが入る）",
+					ExoTemplate = "（Exoテンプレートが入る２）",
 				}
 			};
 		}
@@ -54,18 +59,6 @@ namespace AulTexter.ViewModels
 			}	
 		}
 
-		private int _CurrentListIndex = 0;
-		public int CurrentListIndex
-		{
-			get => _CurrentListIndex;
-			set
-			{
-				if (value < 0)
-					value = 0;
-				RaisePropertyChangedIfSet(ref _CurrentListIndex, value);
-			}
-		}
-
 		#region ExoConfigs
 
 		private ObservableCollection<ExoConfing> _ExoConfigs = new ObservableCollection<ExoConfing>();
@@ -82,6 +75,32 @@ namespace AulTexter.ViewModels
 		public void MakeExoFile()
 		{
 			CurrentComboIndex = -1;
+		}
+
+		public void AddExoConfig()
+		{
+			ExoConfigs.Add(new ExoConfing()
+			{
+				Name = "デフォルト",
+				ExoTemplate = "",
+			});
+		}
+
+		public void RemoveExoConfig(ExoConfing ec)
+		{
+			var index = ExoConfigs.IndexOf(ec);
+
+			if (CurrentComboIndex == index)
+			{
+				MessageBox.Show("コンボボックスで選択中の設定は削除できません", "エラー", 
+								MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			if (CurrentComboIndex > index)
+				CurrentComboIndex--;
+
+			ExoConfigs.RemoveAt(index);
 		}
 
 		#endregion
