@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AulTexter.Models
 {
-	public class ExoConfing
+	public class ExoConfig
 	{
 		public string Name { get; set; }
 

@@ -59,7 +59,7 @@
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 					<TextBlock TextWrapping="Wrap" Text="字幕の設定"/>
-					<ListBox ItemsSource="{Binding ExoConfigs}" SelectedIndex="{Binding CurrentListIndex}" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" Grid.Row="1">
+					<ListBox ItemsSource="{Binding ExoConfigs}" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" Grid.Row="1">
 						<ListBox.ItemTemplate>
 							<DataTemplate>
 								<Grid Margin="2">
