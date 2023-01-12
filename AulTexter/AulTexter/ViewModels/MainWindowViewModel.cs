@@ -26,23 +26,6 @@ namespace AulTexter.ViewModels
 			ExoConfigs = setting.Deserialize<ObservableCollection<ExoConfig>>();
 		}
 
-		public MainWindowViewModel()
-		{
-			ExoConfigs = new ObservableCollection<ExoConfig>()
-			{
-				new ExoConfig()
-				{
-					Name = "通常",
-					ExoTemplate = "（Exoテンプレートが入る）",
-				},
-				new ExoConfig()
-				{
-					Name = "通常2",
-					ExoTemplate = "（Exoテンプレートが入る２）",
-				}
-			};
-		}
-
 		private XmlLoader setting = new XmlLoader("Setting.xml");
 
 		private string _ExoText;
@@ -52,15 +35,15 @@ namespace AulTexter.ViewModels
 			set => RaisePropertyChangedIfSet(ref _ExoText, value);
 		}
 
-		private int _CurrentExoConfigsIndex = 0;
-		public int CurrentExoConfigsIndex
+		private int _CurrentExoConfIndex = 0;
+		public int CurrentExoConfIndex
 		{
-			get => _CurrentExoConfigsIndex;
+			get => _CurrentExoConfIndex;
 			set
 			{
 				if (value < 0)
 					value = 0;
-				RaisePropertyChangedIfSet(ref _CurrentExoConfigsIndex, value);
+				RaisePropertyChangedIfSet(ref _CurrentExoConfIndex, value);
 			}	
 		}
 
@@ -77,9 +60,29 @@ namespace AulTexter.ViewModels
 
 		#region CallMethodAction
 
-		public void MakeExoFile()
+		public void MakeExoFile(object sender)
 		{
+			if (Directory.Exists("ExoFilesOut"))
+			{
+				string ExoFile = $"{Environment.CurrentDirectory}\\ExoFilesOut\\" + DateTime.Now.ToString($"yyyyMMddHHmmss") + $"-{ExoConfigs[CurrentExoConfIndex].Name}-{ExoText}.exo";
+
+				using (StreamWriter stw = new StreamWriter(ExoFile, append: false, Encoding.GetEncoding("shift-jis")))
+					stw.Write(string.Format(ExoConfigs[CurrentExoConfIndex].ExoTemplate, BitConverter.ToString(Encoding.Unicode.GetBytes(ExoText)).Replace("-", "").ToLower().PadRight(4096, '0')).Replace("\n", "\r\n"));
+
+				DragDrop.DoDragDrop(sender as DependencyObject, new DataObject(DataFormats.FileDrop, new string[] { ExoFile }), DragDropEffects.Copy);
+			}
+			else
+			{
+				var result = MessageBox.Show("'ExoFilesOut'フォルダが存在しない為Exoファイルが出力できません。\r\n" +
+					"'ExoFilesOut'フォルダを作成しますか？", "エラー", MessageBoxButton.YesNo, MessageBoxImage.Error);
 			
+				if (result == MessageBoxResult.Yes)
+				{
+					var dirInfo = Directory.CreateDirectory("ExoFilesOut");
+					if (dirInfo.Exists)
+						MessageBox.Show("フォルダを作成しました。再度D&Dを試してください。", "AulTexter", MessageBoxButton.OK, MessageBoxImage.Information);
+				}
+			}
 		}
 
 		public void AddExoConfig()
@@ -95,15 +98,15 @@ namespace AulTexter.ViewModels
 		{
 			var index = ExoConfigs.IndexOf(ec);
 
-			if (CurrentExoConfigsIndex == index)
+			if (CurrentExoConfIndex == index)
 			{
 				MessageBox.Show("コンボボックスで選択中の設定は削除できません", "エラー", 
 								MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 
-			if (CurrentExoConfigsIndex > index)
-				CurrentExoConfigsIndex--;
+			if (CurrentExoConfIndex > index)
+				CurrentExoConfIndex--;
 
 			ExoConfigs.RemoveAt(index);
 		}

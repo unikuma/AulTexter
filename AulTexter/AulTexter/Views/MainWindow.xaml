@@ -41,14 +41,14 @@
 
 					<TextBox Text="{Binding ExoText, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"/>
 
-					<Button Content="Exoファイルを作成 &amp; AviUtlへD&amp;D" Grid.Row="2">
+					<Button Name="MakeExoBtn" Content="Exoファイルを作成 &amp; AviUtlへD&amp;D" Grid.Row="2">
 						<behaviors:Interaction.Triggers>
-							<behaviors:EventTrigger EventName="Click">
-								<l:LivetCallMethodAction MethodName="MakeExoFile" MethodTarget="{Binding}"/>
+							<behaviors:EventTrigger EventName="PreviewMouseLeftButtonDown">
+								<l:LivetCallMethodAction MethodName="MakeExoFile" MethodParameter="{Binding ElementName=MakeExoBtn}" MethodTarget="{Binding}"/>
 							</behaviors:EventTrigger>
 						</behaviors:Interaction.Triggers>
 					</Button>
-					<ComboBox ItemsSource="{Binding ExoConfigs}" DisplayMemberPath="Name" SelectedIndex="{Binding CurrentExoConfigsIndex}" Grid.Row="3"/>
+					<ComboBox ItemsSource="{Binding ExoConfigs}" DisplayMemberPath="Name" SelectedIndex="{Binding CurrentExoConfIndex}" Grid.Row="3"/>
 				</Grid>
 			</TabItem>
 			<TabItem Header="設定" Width="80">
