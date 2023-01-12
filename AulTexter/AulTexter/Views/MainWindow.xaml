@@ -11,6 +11,11 @@
 		<vm:MainWindowViewModel />
 	</Window.DataContext>
 
+	<Window.InputBindings>
+		<KeyBinding Gesture="Ctrl+D" Command="{Binding ComboDown}"/>
+		<KeyBinding Gesture="Ctrl+Shift+D" Command="{Binding ComboUp}"/>
+	</Window.InputBindings>
+	
 	<behaviors:Interaction.Triggers>
 		<!--  When ContentRendered event raised, Initialize method of ViewModel would be called.  -->
 		<behaviors:EventTrigger EventName="ContentRendered">

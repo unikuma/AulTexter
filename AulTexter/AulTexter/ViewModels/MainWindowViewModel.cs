@@ -24,6 +24,8 @@ namespace AulTexter.ViewModels
 		public void Initialize()
 		{
 			ExoConfigs = setting.Deserialize<ObservableCollection<ExoConfig>>();
+
+			CurrentExoConfIndex = -1;
 		}
 
 		private XmlLoader setting = new XmlLoader("Setting.xml");
@@ -43,9 +45,19 @@ namespace AulTexter.ViewModels
 			{
 				if (value < 0)
 					value = 0;
+
+				if (value >= ExoConfigs.Count)
+					value = ExoConfigs.Count - 1;
+				
 				RaisePropertyChangedIfSet(ref _CurrentExoConfIndex, value);
 			}	
 		}
+
+		private ViewModelCommand _ComboDown = null;
+		public ViewModelCommand ComboDown => _ComboDown ?? new ViewModelCommand(() => CurrentExoConfIndex--);
+		
+		private ViewModelCommand _ComboUp = null;
+		public ViewModelCommand ComboUp => _ComboUp ?? new ViewModelCommand(() => CurrentExoConfIndex++);
 
 		#region ExoConfigs
 
