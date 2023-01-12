@@ -74,7 +74,23 @@ namespace AulTexter.ViewModels
 
 		public void MakeExoFile(object sender)
 		{
-			if (Directory.Exists("ExoFilesOut"))
+			if (!Directory.Exists("ExoFilesOut"))
+			{
+				var result = MessageBox.Show("'ExoFilesOut'フォルダが存在しない為Exoファイルが出力できません。\r\n" +
+					"'ExoFilesOut'フォルダを作成しますか？", "エラー", MessageBoxButton.YesNo, MessageBoxImage.Error);
+
+				if (result == MessageBoxResult.Yes)
+				{
+					var dirInfo = Directory.CreateDirectory("ExoFilesOut");
+					if (dirInfo.Exists)
+						MessageBox.Show("フォルダを作成しました。再度D&Dを試してください。", "AulTexter", MessageBoxButton.OK, MessageBoxImage.Information);
+				}
+			}
+			else if (string.IsNullOrWhiteSpace(ExoText))
+			{
+				MessageBox.Show("字幕用テキストがnullや空白文字、空の可能性があります。", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+			else
 			{
 				string ExoFile = $"{Environment.CurrentDirectory}\\ExoFilesOut\\" + DateTime.Now.ToString($"yyyyMMddHHmmss") + $"-{ExoConfigs[CurrentExoConfIndex].Name}-{ExoText}.exo";
 
@@ -82,18 +98,6 @@ namespace AulTexter.ViewModels
 					stw.Write(string.Format(ExoConfigs[CurrentExoConfIndex].ExoTemplate, BitConverter.ToString(Encoding.Unicode.GetBytes(ExoText)).Replace("-", "").ToLower().PadRight(4096, '0')).Replace("\n", "\r\n"));
 
 				DragDrop.DoDragDrop(sender as DependencyObject, new DataObject(DataFormats.FileDrop, new string[] { ExoFile }), DragDropEffects.Copy);
-			}
-			else
-			{
-				var result = MessageBox.Show("'ExoFilesOut'フォルダが存在しない為Exoファイルが出力できません。\r\n" +
-					"'ExoFilesOut'フォルダを作成しますか？", "エラー", MessageBoxButton.YesNo, MessageBoxImage.Error);
-			
-				if (result == MessageBoxResult.Yes)
-				{
-					var dirInfo = Directory.CreateDirectory("ExoFilesOut");
-					if (dirInfo.Exists)
-						MessageBox.Show("フォルダを作成しました。再度D&Dを試してください。", "AulTexter", MessageBoxButton.OK, MessageBoxImage.Information);
-				}
 			}
 		}
 
