@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("AulTexter")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("入力した内容を基に字幕用Exoファイルを生成します。")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("AulTexter")]
