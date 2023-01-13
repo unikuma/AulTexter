@@ -42,14 +42,6 @@ namespace AulTexter.ViewModels
 			}	
 		}
 
-		private ViewModelCommand _ComboDown = null;
-		public ViewModelCommand ComboDown => _ComboDown ?? new ViewModelCommand(() => CurrentExoConfIndex--);
-		
-		private ViewModelCommand _ComboUp = null;
-		public ViewModelCommand ComboUp => _ComboUp ?? new ViewModelCommand(() => CurrentExoConfIndex++);
-
-		#region ExoConfigs
-
 		private ObservableCollection<ExoConfig> _ExoConfigs = new ObservableCollection<ExoConfig>();
 		public ObservableCollection<ExoConfig> ExoConfigs
 		{
@@ -57,10 +49,9 @@ namespace AulTexter.ViewModels
 			set => RaisePropertyChangedIfSet(ref _ExoConfigs, value);
 		}
 
-		#endregion
-
 		#region CallMethodAction
 
+		// Exoファイル作成
 		public void MakeExoFile(object sender)
 		{
 			if (!Directory.Exists("ExoFilesOut"))
@@ -94,6 +85,7 @@ namespace AulTexter.ViewModels
 			}
 		}
 
+		// 設定の追加
 		public void AddExoConfig()
 		{
 			ExoConfigs.Add(new ExoConfig()
@@ -103,25 +95,38 @@ namespace AulTexter.ViewModels
 			});
 		}
 
+		// 設定の削除
 		public void RemoveExoConfig(ExoConfig ec)
 		{
-			var index = ExoConfigs.IndexOf(ec);
-
-			if (CurrentExoConfIndex == index)
+			if (MessageBoxResult.Yes == MessageBox.Show($"「{ec.Name}」を削除しますか？", "AulTexter", MessageBoxButton.OK, MessageBoxImage.Warning))
 			{
-				MessageBox.Show("コンボボックスで選択中の設定は削除できません", "エラー", 
-								MessageBoxButton.OK, MessageBoxImage.Error);
-				return;
+				var index = ExoConfigs.IndexOf(ec);
+
+				if (CurrentExoConfIndex == index)
+				{
+					MessageBox.Show("コンボボックスで選択中の設定は削除できません", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+					return;
+				}
+
+				if (CurrentExoConfIndex > index)
+					CurrentExoConfIndex--;
+
+				ExoConfigs.RemoveAt(index);
 			}
-
-			if (CurrentExoConfIndex > index)
-				CurrentExoConfIndex--;
-
-			ExoConfigs.RemoveAt(index);
 		}
 
 		#endregion
+
+		#region InvokeCommandAction
+
+		private ViewModelCommand _ComboDown = null;
+		public ViewModelCommand ComboDown => _ComboDown ?? new ViewModelCommand(() => CurrentExoConfIndex++);
 		
+		private ViewModelCommand _ComboUp = null;
+		public ViewModelCommand ComboUp => _ComboUp ?? new ViewModelCommand(() => CurrentExoConfIndex--);
+
+		#endregion
+
 		public new void Dispose()
 		{
 			setting.Serialize(ExoConfigs);
