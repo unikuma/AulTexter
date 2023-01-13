@@ -1,20 +1,11 @@
 ﻿using AulTexter.Models;
 using Livet;
-using Livet.Behaviors;
 using Livet.Commands;
-using Livet.EventListeners;
-using Livet.Messaging;
-using Livet.Messaging.IO;
-using Livet.Messaging.Windows;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Xml.Serialization;
 
 namespace AulTexter.ViewModels
 {
@@ -23,9 +14,7 @@ namespace AulTexter.ViewModels
 		// Some useful code snippets for ViewModel are defined as l*(llcom, llcomn, lvcomm, lsprop, etc...).
 		public void Initialize()
 		{
-			ExoConfigs = setting.Deserialize<ObservableCollection<ExoConfig>>();
-
-			CurrentExoConfIndex = -1;
+			ExoConfigs = setting.Deserialize<ObservableCollection<ExoConfig>>() ?? new ObservableCollection<ExoConfig>();
 		}
 
 		private XmlLoader setting = new XmlLoader("Setting.xml");
@@ -89,6 +78,10 @@ namespace AulTexter.ViewModels
 			else if (string.IsNullOrWhiteSpace(ExoText))
 			{
 				MessageBox.Show("字幕用テキストがnullや空白文字、空の可能性があります。", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+			else if (ExoConfigs.Count == 0)
+			{
+				MessageBox.Show("設定が存在しません。設定タブの「追加」ボタンから設定を追加してください", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 			else
 			{

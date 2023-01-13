@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace AulTexter.Models
@@ -26,11 +23,19 @@ namespace AulTexter.Models
 
 		public T Deserialize<T>()
 		{
-			using (StreamReader str = new StreamReader(FilePath))
+			try
 			{
-				XmlSerializer xml = new XmlSerializer(typeof(T));
+				using (StreamReader str = new StreamReader(FilePath))
+				{
+					XmlSerializer xml = new XmlSerializer(typeof(T));
 
-				return (T)xml.Deserialize(str);
+					return (T)xml.Deserialize(str);
+				}
+			}
+			catch
+			{
+				MessageBox.Show($"{FilePath}が開けませんでした", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+				return default;
 			}
 		}
 	}
